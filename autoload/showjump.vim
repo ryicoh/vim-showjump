@@ -54,7 +54,7 @@ func! showjump#refresh()
     endif
   endif
 
-  let change_list = getchangelist()
+  let change_list = getchangelist('%')
   let changes = change_list[0]
   let curr = change_list[1]
   if len(changes) > 0
