@@ -6,16 +6,20 @@ func! showjump#refresh()
     return
   endif
 
+  let bottom = line('w$')
   let top = line('w0')
-  let center = ((bottom - top) / 2) + top
 
   call showjump#save_sign(1, 'H', top)
   call showjump#save_sign(2, 'L', bottom)
-  call showjump#save_sign(3, 'M', center)
 
   let current = line('.')
 
   let saveview = winsaveview()
+  exec 'normal M'
+  let middle = line(".")
+  call winrestview(saveview)
+  call showjump#save_sign(3, 'M', middle)
+
   exec 'normal }'
   let right_curly = line(".")
   call winrestview(saveview)
