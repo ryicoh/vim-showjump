@@ -1,4 +1,4 @@
-set updatetime=100
+" set updatetime=100
 
 augroup Automark
   au CursorHold * :call showjump#refresh()
