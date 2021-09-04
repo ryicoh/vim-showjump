@@ -37,21 +37,39 @@ func! showjump#refresh()
   call showjump#save_sign(11, ')', right_round)
 
   let jump_list = getjumplist()
-
   let jumps = jump_list[0]
-  if len(jump_list) > 0 && len(jumps) > 0
-    let current = jump_list[1]
-    let prev = current - 1
-    let next = current + 1
-    if len(jumps) > prev
+  let curr = jump_list[1]
+  if len(jumps) > 0
+    let prev = curr - 1
+    let next = curr + 1
+    if len(jumps) > prev && jumps[prev].lnum != current
       call showjump#save_sign(16, '<o', jumps[prev].lnum)
     else
       call showjump#remove_sign(16)
     endif
-    if len(jumps) > next
+    if len(jumps) > next && jumps[next].lnum != current
       call showjump#save_sign(17, '<i', jumps[next].lnum)
     else
       call showjump#remove_sign(17)
+    endif
+  endif
+
+  let change_list = getchangelist()
+  let changes = change_list[0]
+  let curr = change_list[1]
+  if len(changes) > 0
+    let prev = curr - 1
+    let prev2 = curr - 2
+    let next = curr + 1
+    if len(changes) > prev && changes[prev].lnum != current
+      call showjump#save_sign(18, 'g;', changes[prev].lnum)
+    else
+      call showjump#remove_sign(18)
+    endif
+    if len(changes) > next && changes[next].lnum != current
+      call showjump#save_sign(20, 'g,', changes[next].lnum)
+    else
+      call showjump#remove_sign(20)
     endif
   endif
 
@@ -60,7 +78,7 @@ endf
 func! showjump#save_sign(id, text, line)
 	silent exec 'sign define '.s:sign_prefix.a:text.' text='.a:text.' texthl=Question'
   call showjump#remove_sign(a:id)
-	silent exec 'sign place '.a:id.' line='.a:line.' name='.s:sign_prefix.a:text.' buffer='.bufnr('%')
+	silent exec 'sign place '.a:id.' line='.a:line.' name='.s:sign_prefix.a:text.' priority='.(100-a:id).' buffer='.bufnr('%')
 endf
 
 func! showjump#remove_sign(id)
