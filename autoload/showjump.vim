@@ -15,33 +15,46 @@ func! showjump#refresh()
 
   let current = line('.')
 
-  let up5 = current - 5
-  if up5 > top && up5 != center
-    call showjump#save_sign(4, '5k', up5)
-  else
-    call showjump#remove_sign(4)
+  let saveview = winsaveview()
+  exec 'normal }'
+  let right_curly = line(".")
+  call winrestview(saveview)
+  call showjump#save_sign(8, '}', right_curly)
+
+  exec 'normal {'
+  let left_curly = line(".")
+  call winrestview(saveview)
+  call showjump#save_sign(9, '{', left_curly)
+
+  exec 'normal ('
+  let left_round = line(".")
+  call winrestview(saveview)
+  call showjump#save_sign(10, '(', left_round)
+
+  exec 'normal )'
+  let right_round = line(".")
+  call winrestview(saveview)
+  call showjump#save_sign(11, ')', right_round)
+
+  let jump_list = getjumplist()
+
+  let jumps = jump_list[0]
+  if len(jump_list) > 0 && len(jumps) > 0
+    let current = jump_list[1]
+    let prev = current - 1
+    let next = current + 1
+    if len(jumps) > prev
+      call showjump#save_sign(16, '<o', jumps[prev].lnum)
+    else
+      call showjump#remove_sign(16)
+    endif
+    if len(jumps) > next
+      call showjump#save_sign(17, '<i', jumps[next].lnum)
+    else
+      call showjump#remove_sign(17)
+    endif
   endif
 
-  let down5 = current + 5
-  if down5 < bottom && down5 != center
-    call showjump#save_sign(5, '5j', down5)
-  else
-    call showjump#remove_sign(5)
-  endif
-
-  let up9 = current - 9
-  if up9 > top && up9 != center
-    call showjump#save_sign(6, '9k', up9)
-  else
-    call showjump#remove_sign(6)
-  endif
-
-  let down9 = current + 9
-  if down9 < bottom && down9 != center
-    call showjump#save_sign(7, '9j', down9)
-  else
-    call showjump#remove_sign(7)
-  endif
 endf
 
 func! showjump#save_sign(id, text, line)
