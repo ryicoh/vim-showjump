@@ -14,6 +14,38 @@ func! showjump#refresh()
 
   let current = line('.')
 
+  let jk5 = get(g:, 'ryicoh#vim_showjump#5jk_enabled', 0)
+  if jk5
+    let up5 = current - 5
+    if up5 > top
+      call showjump#save_sign(4, '5k', up5)
+    else
+      call showjump#remove_sign(4)
+    endif
+    let down5 = current + 5
+    if down5 < bottom
+      call showjump#save_sign(5, '5j', down5)
+    else
+      call showjump#remove_sign(5)
+    endif
+  endif
+
+  let jk9 = get(g:, 'ryicoh#vim_showjump#9jk_enabled', 0)
+  if jk9
+    let up9 = current - 9
+    if up9 > top
+      call showjump#save_sign(6, '9k', up9)
+    else
+      call showjump#remove_sign(6)
+    endif
+    let down9 = current + 9
+    if down9 < bottom
+      call showjump#save_sign(7, '9j', down9)
+    else
+      call showjump#remove_sign(7)
+    endif
+  endif
+
   let saveview = winsaveview()
   exec 'normal M'
   let middle = line(".")
