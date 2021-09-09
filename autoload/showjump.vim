@@ -14,8 +14,7 @@ func! showjump#refresh()
 
   let current = line('.')
 
-  let jk5 = get(g:, 'ryicoh#vim_showjump#5jk_enabled', 0)
-  if jk5
+  if get(g:, 'ryicoh#vim_showjump#5jk_enabled', 0)
     let up5 = current - 5
     if up5 > top
       call showjump#save_sign(4, '5k', up5)
@@ -30,8 +29,7 @@ func! showjump#refresh()
     endif
   endif
 
-  let jk9 = get(g:, 'ryicoh#vim_showjump#9jk_enabled', 0)
-  if jk9
+  if get(g:, 'ryicoh#vim_showjump#9jk_enabled', 0)
     let up9 = current - 9
     if up9 > top
       call showjump#save_sign(6, '9k', up9)
@@ -47,30 +45,41 @@ func! showjump#refresh()
   endif
 
   let saveview = winsaveview()
-  exec 'normal M'
-  let middle = line(".")
-  call winrestview(saveview)
-  call showjump#save_sign(3, 'M', middle)
 
-  exec 'normal }'
-  let right_curly = line(".")
-  call winrestview(saveview)
-  call showjump#save_sign(8, '}', right_curly)
+  if get(g:, 'ryicoh#vim_showjump#middle_enabled', 0)
+    exec 'normal M'
+    let middle = line(".")
+    call winrestview(saveview)
+    call showjump#save_sign(3, 'M', middle)
+  endif
 
-  exec 'normal {'
-  let left_curly = line(".")
-  call winrestview(saveview)
-  call showjump#save_sign(9, '{', left_curly)
+  if get(g:, 'ryicoh#vim_showjump#right_curly_enabled', 0)
+    exec 'normal }'
+    let right_curly = line(".")
+    call winrestview(saveview)
+    call showjump#save_sign(8, '}', right_curly)
+  endif
 
-  exec 'normal ('
-  let left_round = line(".")
-  call winrestview(saveview)
-  call showjump#save_sign(10, '(', left_round)
+  if get(g:, 'ryicoh#vim_showjump#left_curly_enabled', 0)
+    exec 'normal {'
+    let left_curly = line(".")
+    call winrestview(saveview)
+    call showjump#save_sign(9, '{', left_curly)
+  endif
 
-  exec 'normal )'
-  let right_round = line(".")
-  call winrestview(saveview)
-  call showjump#save_sign(11, ')', right_round)
+  if get(g:, 'ryicoh#vim_showjump#right_round_enabled', 0)
+    exec 'normal ('
+    let left_round = line(".")
+    call winrestview(saveview)
+    call showjump#save_sign(10, '(', left_round)
+  endif
+
+  if get(g:, 'ryicoh#vim_showjump#left_round_enabled', 0)
+    exec 'normal )'
+    let right_round = line(".")
+    call winrestview(saveview)
+    call showjump#save_sign(11, ')', right_round)
+  endif
 
   let jump_list = getjumplist()
   let jumps = jump_list[0]
